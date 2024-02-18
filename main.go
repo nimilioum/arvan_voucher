@@ -13,7 +13,7 @@ func main() {
 
 	err := godotenv.Load(".env")
 	if err != nil {
-		e.Logger.Fatal(err.Error())
+
 	}
 
 	db, err := config.InitDB()
