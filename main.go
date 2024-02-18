@@ -1,14 +1,35 @@
 package main
 
 import (
+	"arvan_voucher/api/routes"
+	"arvan_voucher/config"
+	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4"
-	"net/http"
 )
 
 func main() {
+
 	e := echo.New()
-	e.GET("/", func(c echo.Context) error {
-		return c.String(http.StatusOK, "Hello, World!")
-	})
-	e.Logger.Fatal(e.Start(":1323"))
+
+	err := godotenv.Load(".env")
+	if err != nil {
+		e.Logger.Fatal(err.Error())
+	}
+
+	db, err := config.InitDB()
+	if err != nil {
+		e.Logger.Fatal(err.Error())
+	}
+	e.Use(config.DBMiddleware(db))
+
+	err = config.Migrate(db)
+	if err != nil {
+		e.Logger.Fatal(err.Error())
+	}
+
+	apiRouter := e.Group("/api")
+	routes.AddApiRoutes(apiRouter)
+
+	e.Logger.Fatal(e.Start("localhost:5000"))
+
 }
