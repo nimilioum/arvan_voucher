@@ -3,6 +3,7 @@ package config
 import (
 	"arvan_voucher/core/models/payment"
 	"arvan_voucher/core/models/user"
+	"arvan_voucher/core/models/voucher"
 	_ "embed"
 	"fmt"
 	"github.com/labstack/echo/v4"
@@ -37,6 +38,7 @@ func Migrate(db *gorm.DB) (err error) {
 		&user.User{},
 		&payment.Wallet{},
 		&payment.Transaction{},
+		&voucher.Voucher{},
 	)
 }
 

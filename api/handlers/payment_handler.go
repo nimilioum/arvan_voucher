@@ -30,13 +30,13 @@ func DepositHandler(c echo.Context) (err error) {
 	err = services.Deposit(tx, u, sc.Amount)
 	if err != nil {
 		tx.Rollback()
-		return err
+		return c.JSON(http.StatusBadRequest, &utils.ErrorMessage{Message: err.Error()})
 	}
 
 	res := tx.Commit()
 	if res.Error != nil {
 		tx.Rollback()
-		return res.Error
+		return c.JSON(http.StatusBadRequest, &utils.ErrorMessage{Message: res.Error.Error()})
 	}
 
 	return c.NoContent(http.StatusCreated)
